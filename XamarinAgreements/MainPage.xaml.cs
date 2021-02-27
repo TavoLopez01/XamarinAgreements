@@ -13,9 +13,8 @@ namespace XamarinAgreements
 {
     public partial class MainPage : ContentPage
     {
-        private const string api = "https://localhost:44328/Agreements";
-        private readonly HttpClient http = new HttpClient();
         private ObservableCollection<AgreementsModel> _agreements;
+        private readonly AgreementsService agreementsService = new AgreementsService();
         public MainPage()
         {
             InitializeComponent();
@@ -23,9 +22,7 @@ namespace XamarinAgreements
 
         protected override async void OnAppearing()
         {
-            string query = await http.GetStringAsync(api);
-            List<AgreementsModel> agreementsResult = JsonConvert.DeserializeObject<List<AgreementsModel>>(query);
-            _agreements = new ObservableCollection<AgreementsModel>(agreementsResult);
+            _agreements = await agreementsService.GetAgreements();
             Agreements_List.ItemsSource = _agreements;
             base.OnAppearing();
         }
